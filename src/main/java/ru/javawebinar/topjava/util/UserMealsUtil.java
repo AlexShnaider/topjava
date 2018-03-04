@@ -30,19 +30,19 @@ public class UserMealsUtil {
                 mealList, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
     }
 
-    public static List<UserMealWithExceed> getFilteredWithExceededUsingStream
-            (List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<UserMealWithExceed> getFilteredWithExceededUsingStream(
+            List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> dayCalories = mealList.stream()
                 .collect(Collectors.groupingBy(UserMeal::getDate, Collectors.summingInt(UserMeal::getCalories)));
         return mealList.stream()
                 .filter(p -> TimeUtil.isBetween(p.getTime(), startTime, endTime))
-                .map(meal -> new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories()
-                        , dayCalories.get(meal.getDate()) > caloriesPerDay))
+                .map(meal -> new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(),
+                        dayCalories.get(meal.getDate()) > caloriesPerDay))
                 .collect(Collectors.toList());
     }
 
-    public static List<UserMealWithExceed> getFilteredWithExceededUsingLoops
-            (List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
+    public static List<UserMealWithExceed> getFilteredWithExceededUsingLoops(
+            List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> dayCalories = new HashMap<>();
         for (UserMeal meal : mealList) {
             Integer sum = dayCalories.getOrDefault(meal.getDate(), 0) + meal.getCalories();
@@ -51,8 +51,8 @@ public class UserMealsUtil {
         List<UserMealWithExceed> answer = new ArrayList<>();
         for (UserMeal meal : mealList) {
             if (TimeUtil.isBetween(meal.getTime(), startTime, endTime)) {
-                answer.add(new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories()
-                        , dayCalories.get(meal.getDate()) > caloriesPerDay));
+                answer.add(new UserMealWithExceed(meal.getDateTime(), meal.getDescription(), meal.getCalories(),
+                        dayCalories.get(meal.getDate()) > caloriesPerDay));
             }
         }
         return answer;
