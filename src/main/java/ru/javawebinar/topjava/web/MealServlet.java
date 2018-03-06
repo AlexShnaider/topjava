@@ -67,7 +67,6 @@ public class MealServlet extends HttpServlet {
         request.setAttribute("meals",
                 MealsUtil.getFilteredWithExceeded(storage.getAllSorted(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
         String action = request.getParameter("action");
-        action = action == null ? "view" : action;
         switch (action) {
             case "delete":
                 log.debug("Delete Meal, id = " + request.getParameter("id"));
@@ -80,7 +79,7 @@ public class MealServlet extends HttpServlet {
                 break;
             case "add":
                 log.debug("Create new empty Meal");
-                request.setAttribute("meal", new Meal(storage.getAllSorted().size() + 1, null, null, 0));
+                request.setAttribute("meal", new Meal(storage.getAllSorted().size(), null, null, 0));
                 log.debug("Redirect to editMeal.jsp");
                 request.getRequestDispatcher("/editMeal.jsp").forward(request, response);
                 break;
