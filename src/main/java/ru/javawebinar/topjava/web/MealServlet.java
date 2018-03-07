@@ -1,8 +1,8 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
 import javax.servlet.ServletException;
@@ -62,10 +62,19 @@ public class MealServlet extends HttpServlet {
         request.setAttribute("meals",
                 MealsUtil.getFilteredWithExceeded(storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
         String action = request.getParameter("action");
+        if (action == null) {
+            request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(
+                    storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
+            log.debug("Redirect to viewMeals.jsp");
+            request.getRequestDispatcher("/viewMeals.jsp").forward(request, response);
+            return;
+        }
         switch (action) {
             case "delete":
                 log.debug("Delete Meal, id = " + request.getParameter("id"));
                 storage.delete(Integer.valueOf(request.getParameter("id")));
+                response.sendRedirect("meals");
+                break;
             case "view":
                 request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(
                         storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
@@ -82,7 +91,6 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", storage.get(Integer.valueOf(request.getParameter("id"))));
                 log.debug("Redirect to editMeal.jsp");
                 request.getRequestDispatcher("/editMeal.jsp").forward(request, response);
-                break;
         }
     }
 }
