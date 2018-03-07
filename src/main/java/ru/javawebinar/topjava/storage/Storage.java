@@ -1,11 +1,10 @@
-package ru.javawebinar.topjava.Storage;
+package ru.javawebinar.topjava.storage;
 
 import java.util.List;
 
 public interface Storage<V> {
-    void clear();
 
-    void save(V value);
+    V save(V value);
 
     void update(V value);
 
@@ -13,5 +12,5 @@ public interface Storage<V> {
 
     void delete(int id);
 
-    List<V> getAllSorted();
+    List<V> getAll();
 }

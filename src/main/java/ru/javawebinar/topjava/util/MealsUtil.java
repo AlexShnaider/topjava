@@ -1,12 +1,14 @@
 package ru.javawebinar.topjava.util;
 
-import ru.javawebinar.topjava.Config;
-import ru.javawebinar.topjava.Storage.Storage;
+import ru.javawebinar.topjava.storage.MapMealStorage;
+import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.MealWithExceed;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -16,8 +18,15 @@ import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 
 public class MealsUtil {
-    private static Storage<Meal> storage = Config.getInstance().getStorage();
-    private static List<Meal> meals = storage.getAllSorted();
+    private static Storage<Meal> storage = new MapMealStorage(Arrays.asList(
+            new Meal(0, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Breakfast", 500),
+            new Meal(1, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Lunch", 1000),
+            new Meal(2, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Dinner", 500),
+            new Meal(3, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Breakfast", 1000),
+            new Meal(4, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Lunch", 500),
+            new Meal(5, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Dinner", 510)
+    ));
+    private static List<Meal> meals = storage.getAll();
 
     public static void main(String[] args) {
         List<MealWithExceed> mealsWithExceeded = getFilteredWithExceeded(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000);
@@ -26,6 +35,10 @@ public class MealsUtil {
         System.out.println(getFilteredWithExceededByCycle(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
         System.out.println(getFilteredWithExceededInOnePass(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
         System.out.println(getFilteredWithExceededInOnePass2(meals, LocalTime.of(7, 0), LocalTime.of(12, 0), 2000));
+    }
+
+    public static Storage<Meal> getStorage() {
+        return storage;
     }
 
     public static List<MealWithExceed> getFilteredWithExceeded(List<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {

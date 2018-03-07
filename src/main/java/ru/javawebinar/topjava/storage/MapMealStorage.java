@@ -1,16 +1,16 @@
-package ru.javawebinar.topjava.Storage;
+package ru.javawebinar.topjava.storage;
 
 import ru.javawebinar.topjava.model.Meal;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MapMealStorage implements Storage<Meal> {
     private final Map<Integer, Meal> meals = new ConcurrentHashMap<>();
-    private Integer id = 0;
+    private AtomicInteger id = new AtomicInteger(0);
 
     public MapMealStorage(List<Meal> inputMeals) {
         for (Meal meal : inputMeals) {
@@ -19,14 +19,10 @@ public class MapMealStorage implements Storage<Meal> {
     }
 
     @Override
-    public void clear() {
-        meals.clear();
-        id = 0;
-    }
-
-    @Override
-    public void save(Meal meal) {
-        meals.put(id++, meal);
+    public Meal save(Meal meal) {
+        Meal answer = meals.put(id.intValue(), meal);
+        id.incrementAndGet();
+        return answer;
     }
 
     @Override
@@ -42,19 +38,17 @@ public class MapMealStorage implements Storage<Meal> {
     @Override
     public void delete(int id) {
         meals.remove(id);
-        if (this.id > 0) {
-            this.id--;
+        if (this.id.intValue() > 0) {
+            this.id.decrementAndGet();
         }
     }
 
     @Override
-    public List<Meal> getAllSorted() {
-        List<Meal> answer = new ArrayList<>(meals.values());
-        Collections.sort(answer);
-        return answer;
+    public List<Meal> getAll() {
+        return new ArrayList<>(meals.values());
     }
 
     public Integer getId() {
-        return id;
+        return id.intValue();
     }
 }

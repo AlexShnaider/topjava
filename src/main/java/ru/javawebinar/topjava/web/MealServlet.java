@@ -1,8 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
-import ru.javawebinar.topjava.Config;
-import ru.javawebinar.topjava.Storage.Storage;
+import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -22,7 +21,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
     private static final int CALORIES_PER_DAY = 2000;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private final Storage<Meal> storage = Config.getInstance().getStorage();
+    private final Storage<Meal> storage = MealsUtil.getStorage();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -41,22 +40,18 @@ public class MealServlet extends HttpServlet {
             calories = Integer.valueOf(request.getParameter("calories"));
         } catch (NumberFormatException e) {
         }
-        Meal newMeal = null;
         if (description != null && description.length() != 0 && dateTime != null && calories != null) {
-            newMeal = new Meal(id, dateTime, description, calories);
-        }
-        Meal meal = storage.get(id);
-        if (newMeal != null) {
-            if (meal != null) {
-                log.debug("Update Meal id = " + meal.getId());
-                storage.update(newMeal);
+            if (id == -1) {
+                id = storage.getAll().size();
+                log.debug("Save new Meal id = " + id);
+                storage.save(new Meal(id, dateTime, description, calories));
             } else {
-                log.debug("Save new Meal id = " + newMeal.getId());
-                storage.save(newMeal);
+                log.debug("Update Meal id = " + id);
+                storage.update(new Meal(id, dateTime, description, calories));
             }
         }
         request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(
-                storage.getAllSorted(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
+                storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
         request.getRequestDispatcher("/viewMeals.jsp").forward(request, response);
     }
 
@@ -65,7 +60,7 @@ public class MealServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         request.setAttribute("meals",
-                MealsUtil.getFilteredWithExceeded(storage.getAllSorted(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
+                MealsUtil.getFilteredWithExceeded(storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
         String action = request.getParameter("action");
         switch (action) {
             case "delete":
@@ -73,13 +68,13 @@ public class MealServlet extends HttpServlet {
                 storage.delete(Integer.valueOf(request.getParameter("id")));
             case "view":
                 request.setAttribute("meals", MealsUtil.getFilteredWithExceeded(
-                        storage.getAllSorted(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
+                        storage.getAll(), LocalTime.MIN, LocalTime.MAX, CALORIES_PER_DAY));
                 log.debug("Redirect to viewMeals.jsp");
                 request.getRequestDispatcher("/viewMeals.jsp").forward(request, response);
                 break;
             case "add":
                 log.debug("Create new empty Meal");
-                request.setAttribute("meal", new Meal(storage.getAllSorted().size(), null, null, 0));
+                request.setAttribute("meal", new Meal(-1, null, null, 0));
                 log.debug("Redirect to editMeal.jsp");
                 request.getRequestDispatcher("/editMeal.jsp").forward(request, response);
                 break;
