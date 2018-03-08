@@ -20,9 +20,8 @@ public class MapMealStorage implements Storage<Meal> {
 
     @Override
     public Meal save(Meal meal) {
-        Meal answer = meals.put(id.intValue(), meal);
-        id.incrementAndGet();
-        return answer;
+        meals.put(id.getAndIncrement(), meal);
+        return meal;
     }
 
     @Override
@@ -38,9 +37,6 @@ public class MapMealStorage implements Storage<Meal> {
     @Override
     public void delete(int id) {
         meals.remove(id);
-        if (this.id.intValue() > 0) {
-            this.id.decrementAndGet();
-        }
     }
 
     @Override
@@ -48,7 +44,8 @@ public class MapMealStorage implements Storage<Meal> {
         return new ArrayList<>(meals.values());
     }
 
-    public Integer getId() {
+    @Override
+    public int getId() {
         return id.intValue();
     }
 }

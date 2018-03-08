@@ -13,4 +13,6 @@ public interface Storage<V> {
     void delete(int id);
 
     List<V> getAll();
+
+    int getId();
 }

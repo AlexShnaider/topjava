@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.storage.MapMealStorage;
 import ru.javawebinar.topjava.storage.Storage;
 import ru.javawebinar.topjava.util.MealsUtil;
 
@@ -12,8 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -21,7 +24,14 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = getLogger(UserServlet.class);
     private static final int CALORIES_PER_DAY = 2000;
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private final Storage<Meal> storage = MealsUtil.getStorage();
+    private final Storage<Meal> storage = new MapMealStorage(Arrays.asList(
+            new Meal(0, LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Breakfast", 500),
+            new Meal(1, LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Lunch", 1000),
+            new Meal(2, LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Dinner", 500),
+            new Meal(3, LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Breakfast", 1000),
+            new Meal(4, LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Lunch", 500),
+            new Meal(5, LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Dinner", 510)
+    ));
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -30,21 +40,22 @@ public class MealServlet extends HttpServlet {
         Integer id = Integer.valueOf(request.getParameter("id"));
         String description = request.getParameter("description");
         String dateTimeParts = request.getParameter("dateTime").trim();
-        LocalDateTime dateTime = null;
+        LocalDateTime dateTime;
         try {
             dateTime = LocalDateTime.parse(dateTimeParts, dateTimeFormatter);
         } catch (DateTimeParseException e) {
+            dateTime = null;
         }
-        Integer calories = null;
+        Integer calories;
         try {
             calories = Integer.valueOf(request.getParameter("calories"));
         } catch (NumberFormatException e) {
+            calories = null;
         }
         if (description != null && description.length() != 0 && dateTime != null && calories != null) {
             if (id == -1) {
-                id = storage.getAll().size();
-                log.debug("Save new Meal id = " + id);
-                storage.save(new Meal(id, dateTime, description, calories));
+                log.debug("Save new Meal id = " + storage.getId());
+                storage.save(new Meal(storage.getId(), dateTime, description, calories));
             } else {
                 log.debug("Update Meal id = " + id);
                 storage.update(new Meal(id, dateTime, description, calories));
