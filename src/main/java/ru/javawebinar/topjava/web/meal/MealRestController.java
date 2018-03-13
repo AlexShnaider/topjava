@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.time.LocalDate;
@@ -17,48 +19,48 @@ import java.util.List;
 public class MealRestController {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    private final int userId = AuthorizedUser.id();
+    private static final int USER_ID = AuthorizedUser.id();
+    private static final int USER_CALORIES = AuthorizedUser.getCaloriesPerDay();
 
     @Autowired
     private MealService service;
 
-    public List<Meal> getAll() {
+    public List<MealWithExceed> getAll() {
         log.info("getAll");
-        return service.getAll();
+        return MealsUtil.getWithExceeded(service.getAll(USER_ID), USER_CALORIES);
     }
 
-    public List<Meal> getAllFiltered(LocalDate startDate, LocalDate endDate) {
+    public List<MealWithExceed> getAllFiltered(
+            LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime) {
         log.info("getAll");
-        return service.getAllFiltered(startDate, endDate);
-    }
-
-    public List<Meal> getAllFiltered(LocalTime startTime, LocalTime endTime) {
-        log.info("getAll");
-        return service.getAllFiltered(startTime, endTime);
+        return MealsUtil.getFilteredWithExceeded(
+                service.getAll(USER_ID), USER_CALORIES,
+                startDate == null ? LocalDate.MIN : startDate,
+                startTime == null ? LocalTime.MIN : startTime,
+                endDate == null ? LocalDate.MAX : endDate,
+                endTime == null ? LocalTime.MAX : endTime);
     }
 
     public Meal get(int id) {
         log.info("get {}", id);
-        return service.get(id);
+        return service.get(id, USER_ID);
     }
 
     public Meal create(Meal meal) throws IllegalArgumentException {
         log.info("create {}", meal);
         ValidationUtil.checkNew(meal);
-        ValidationUtil.assureUserIdConsistent(meal, userId);
-        return service.create(meal);
+        return service.create(meal, USER_ID);
     }
 
     public void delete(int id) {
         log.info("delete {}", id);
-        service.delete(id);
+        service.delete(id, USER_ID);
     }
 
     public void update(Meal meal) throws IllegalArgumentException {
         log.info("update {}", meal);
         ValidationUtil.checkNotNew(meal);
-        ValidationUtil.assureUserIdConsistent(meal, userId);
-        service.update(meal);
+        service.update(meal, USER_ID);
     }
 
 }
