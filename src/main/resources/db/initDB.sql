@@ -31,12 +31,12 @@ CREATE TABLE meals
 (
   user_id     INTEGER   NOT NULL,
   id          INTEGER DEFAULT nextval('global_seq'),
-  date        TIMESTAMP NOT NULL,
+  date_time   TIMESTAMP NOT NULL,
   description VARCHAR   NOT NULL,
   calories    INTEGER   NOT NULL,
+  CONSTRAINT meals_user_date_idx UNIQUE (user_id, date_time),
   FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX meals_unique_date_idx
-  ON meals (date);
-CREATE UNIQUE INDEX meals_unique_user_meal_idx
+CREATE INDEX meals_user_meal_idx
   ON meals (user_id, id);
+SET enable_seqscan = OFF;
