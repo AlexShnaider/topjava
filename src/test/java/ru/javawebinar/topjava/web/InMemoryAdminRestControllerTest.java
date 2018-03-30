@@ -31,14 +31,14 @@ public class InMemoryAdminRestControllerTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         // re-initialize
         InMemoryUserRepositoryImpl repository = appCtx.getBean(InMemoryUserRepositoryImpl.class);
         repository.init();
     }
 
     @Test
-    public void testDelete() throws Exception {
+    public void testDelete() {
         controller.delete(UserTestData.USER_ID);
         Collection<User> users = controller.getAll();
         Assert.assertEquals(users.size(), 1);
@@ -46,7 +46,7 @@ public class InMemoryAdminRestControllerTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void testDeleteNotFound() throws Exception {
+    public void testDeleteNotFound() {
         controller.delete(10);
     }
 }
