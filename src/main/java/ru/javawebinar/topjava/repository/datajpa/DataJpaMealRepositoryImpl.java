@@ -19,10 +19,11 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        if (!meal.isNew() && get(meal.getId(), userId) == null) {
+        //the call to method get has to be passed through bean crudMealRepository https://stackoverflow.com/a/27269886
+        if (!meal.isNew() && !crudMealRepository.findByUserIdAndId(userId, meal.getId()).isPresent()) {
             return null;
         }
-        meal.setUser(crudUserRepository.findById(userId).get());
+        meal.setUser(crudUserRepository.getOne(userId));
         return crudMealRepository.save(meal);
     }
 

@@ -26,9 +26,5 @@ public class Profiles {
             }
         }
     }
-
-    public static String getActiveRepositoryProfile() {
-        return REPOSITORY_IMPLEMENTATION;
-    }
 }
 
