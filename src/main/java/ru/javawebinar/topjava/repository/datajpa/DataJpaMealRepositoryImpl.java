@@ -46,4 +46,8 @@ public class DataJpaMealRepositoryImpl implements MealRepository {
     public List<Meal> getBetween(LocalDateTime startDate, LocalDateTime endDate, int userId) {
         return crudMealRepository.findAllByUserIdAndDateTimeBetweenOrderByDateTimeDesc(userId, startDate, endDate);
     }
+
+    public Meal getWithUser(int id, int userId){
+        return crudMealRepository.getWithUser(userId, id).orElse(null);
+    }
 }

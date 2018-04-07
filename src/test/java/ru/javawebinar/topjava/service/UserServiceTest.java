@@ -19,10 +19,11 @@ public abstract class UserServiceTest extends BaseServiceTest{
 
     @Test
     public void create() throws Exception {
-        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555, false, new Date(), Collections.singleton(Role.ROLE_USER));
+        User newUser = new User(null, "New", "new@gmail.com", "newPass", 1555,
+                false, new Date(), Collections.singleton(Role.ROLE_USER));
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        assertMatch(service.getAll(), ADMIN, newUser, USER);
+        assertMatch(service.getAll(), ADMIN, newUser, USER, USER_WITHOUT_MEALS);
     }
 
     @Test(expected = DataAccessException.class)
@@ -33,7 +34,7 @@ public abstract class UserServiceTest extends BaseServiceTest{
     @Test
     public void delete() throws Exception {
         service.delete(USER_ID);
-        assertMatch(service.getAll(), ADMIN);
+        assertMatch(service.getAll(), ADMIN, USER_WITHOUT_MEALS);
     }
 
     @Test(expected = NotFoundException.class)
@@ -70,6 +71,6 @@ public abstract class UserServiceTest extends BaseServiceTest{
     @Test
     public void getAll() throws Exception {
         List<User> all = service.getAll();
-        assertMatch(all, ADMIN, USER);
+        assertMatch(all, ADMIN, USER, USER_WITHOUT_MEALS);
     }
 }

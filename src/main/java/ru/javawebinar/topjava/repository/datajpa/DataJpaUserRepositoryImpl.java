@@ -30,6 +30,10 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
         return crudRepository.findById(id).orElse(null);
     }
 
+    public User getWithMeals(int id) {
+        return crudRepository.getWithMeals(id).orElse(null);
+    }
+
     @Override
     public User getByEmail(String email) {
         return crudRepository.getByEmail(email);
