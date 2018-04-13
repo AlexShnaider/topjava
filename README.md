@@ -1,6 +1,6 @@
-[![Codacy Badge]([![Codacy Badge](https://api.codacy.com/project/badge/Grade/a56b4cb6853d424b93b35f625402c833)](https://www.codacy.com/app/AlexShnaider/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AlexShnaider/topjava&amp;utm_campaign=Badge_Grade))](https://app.codacy.com/app/AlexShnaider/topjava)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a56b4cb6853d424b93b35f625402c833)](https://www.codacy.com/app/AlexShnaider/topjava?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=AlexShnaider/topjava&amp;utm_campaign=Badge_Grade)
+[![Dependency Status](https://www.versioneye.com/user/projects/5ab7ba340fb24f44b061977d/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5ab7ba340fb24f44b061977d)
 [![Build Status](https://travis-ci.org/AlexShnaider/topjava.svg?branch=master)](https://travis-ci.org/AlexShnaider/topjava)
-[![VersionEye](https://www.versioneye.com/user/projects/5ab7ba340fb24f44b061977d/badge.svg)](https://www.versioneye.com/user/projects/5a14435c0fb24f2a6d408cde)
 Java Enterprise Online Project 
 ===============================
 Разработка полнофункционального Spring/JPA Enterprise приложения c авторизацией и правами доступа на основе ролей с использованием наиболее популярных инструментов и технологий Java: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css,js), datatables, jQuery + plugins, Java 8 Stream and Time API и хранением в базах данных Postgresql и HSQLDB.
