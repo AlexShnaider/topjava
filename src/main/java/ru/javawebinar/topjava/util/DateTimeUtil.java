@@ -28,4 +28,20 @@ public class DateTimeUtil {
     public static LocalTime parseLocalTime(String str) {
         return StringUtils.isEmpty(str) ? null : LocalTime.parse(str);
     }
+
+    public static LocalDate maxDateIfEmpty(String str) {
+        return StringUtils.isEmpty(str) ? MAX_DATE : LocalDate.parse(str);
+    }
+
+    public static LocalDate minDateIfEmpty(String str) {
+        return StringUtils.isEmpty(str) ? MIN_DATE : LocalDate.parse(str);
+    }
+
+    public static LocalTime maxTimeIfEmpty(String str) {
+        return StringUtils.isEmpty(str) ? LocalTime.MAX : LocalTime.parse(str);
+    }
+
+    public static LocalTime minTimeIfEmpty(String str) {
+        return StringUtils.isEmpty(str) ? LocalTime.MIN : LocalTime.parse(str);
+    }
 }
