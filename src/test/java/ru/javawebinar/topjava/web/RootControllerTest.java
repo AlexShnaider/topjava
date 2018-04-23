@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.USER;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
@@ -24,6 +25,33 @@ public class RootControllerTest extends AbstractControllerTest {
                                 hasProperty("id", is(START_SEQ)),
                                 hasProperty("name", is(USER.getName()))
                         )
+                )))
+                .andExpect(model().attribute("users", hasItem(
+                        allOf(
+                                hasProperty("id", is(START_SEQ + 1)),
+                                hasProperty("name", is(ADMIN.getName()))
+                        )
                 )));
+    }
+
+    @Test
+    public void testMeals() throws Exception {
+        mockMvc.perform(get("/meals"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("meals"))
+                .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
+                .andExpect(model().attribute("meals", hasSize(6)))
+                .andExpect(model().attribute("meals", hasItem(
+                        hasProperty("id", is(START_SEQ + 2))
+                )));
+    }
+
+    @Test
+    public void testResources() throws Exception {
+        mockMvc.perform(get("/resources/css/style.css"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("text/css"));
     }
 }
