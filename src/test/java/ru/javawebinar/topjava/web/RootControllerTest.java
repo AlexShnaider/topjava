@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN;
 import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.MealTestData.*;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 import static ru.javawebinar.topjava.model.AbstractBaseEntity.START_SEQ;
 
 public class RootControllerTest extends AbstractControllerTest {
@@ -42,16 +44,6 @@ public class RootControllerTest extends AbstractControllerTest {
                 .andExpect(view().name("meals"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
                 .andExpect(model().attribute("meals", hasSize(6)))
-                .andExpect(model().attribute("meals", hasItem(
-                        hasProperty("id", is(START_SEQ + 2))
-                )));
-    }
-
-    @Test
-    public void testResources() throws Exception {
-        mockMvc.perform(get("/resources/css/style.css"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith("text/css"));
+                .andExpect(model().attribute("meals", getWithExceeded(MEALS, DEFAULT_CALORIES_PER_DAY)));
     }
 }

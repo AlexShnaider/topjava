@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 import static ru.javawebinar.topjava.UserTestData.USER;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 import static ru.javawebinar.topjava.web.json.JsonUtil.writeValue;
 
 public class MealRestControllerTest extends AbstractControllerTest {
@@ -79,8 +80,19 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(writeValue(Arrays.asList(MEAL6, MEAL5, MEAL4, MEAL3, MEAL2, MEAL1)))));
+                .andExpect(content().json(writeValue(getWithExceeded(MEALS, DEFAULT_CALORIES_PER_DAY)))));
     }
+
+    /*@Test
+    public void testGetBetweenDateTimeFiltered() throws Exception {
+        TestUtil.print(mockMvc.perform(get(REST_URL + "filtered")
+                .param("startDateTime", "2015-05-30T10:00:00")
+                .param("endDateTime", "2015-05-30T18:00:00"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(writeValue(getWithExceeded(Arrays.asList(MEAL2, MEAL1),DEFAULT_CALORIES_PER_DAY)))));
+    }*/
 
     @Test
     public void testGetBetweenDateTimeFiltered() throws Exception {
@@ -92,7 +104,8 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(writeValue(Arrays.asList(MEAL2, MEAL1)))));
+                .andExpect(content().json(writeValue(
+                        Arrays.asList(createWithExceed(MEAL2, false), createWithExceed(MEAL1, false))))));
     }
 
     @Test
@@ -103,7 +116,10 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(writeValue(Arrays.asList(MEAL3, MEAL2, MEAL1)))));
+                .andExpect(content().json(writeValue(Arrays.asList(
+                        createWithExceed(MEAL3, false),
+                        createWithExceed(MEAL2, false),
+                        createWithExceed(MEAL1, false))))));
     }
 
     @Test
@@ -114,6 +130,10 @@ public class MealRestControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(content().json(writeValue(Arrays.asList(MEAL5, MEAL4, MEAL2, MEAL1)))));
+                .andExpect(content().json(writeValue(Arrays.asList(
+                        createWithExceed(MEAL5, true),
+                        createWithExceed(MEAL4, true),
+                        createWithExceed(MEAL2, false),
+                        createWithExceed(MEAL1, false))))));
     }
 }
