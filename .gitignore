@@ -4,6 +4,7 @@ target
 *.iml
 log
 temp
+/src/main/resources/db/
 
 
 
