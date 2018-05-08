@@ -1,12 +1,16 @@
 var ajaxUrl = "ajax/profile/meals/";
 var datatableApi;
 
-function updateTable() {
+function filterTable() {
     $.ajax({
         type: "POST",
         url: ajaxUrl + "filter",
         data: $("#filter").serialize()
     }).done(updateTableByData);
+}
+
+function updateTable() {
+    $.get(ajaxUrl, updateTableByData);
 }
 
 function clearFilter() {
@@ -16,11 +20,21 @@ function clearFilter() {
 
 $(function () {
     datatableApi = $("#datatable").DataTable({
+        "ajax": {
+            "url": ajaxUrl,
+            "dataSrc": ""
+        },
         "paging": false,
         "info": true,
         "columns": [
             {
-                "data": "dateTime"
+                "data": "dateTime",
+                "render": function (date, type, row) {
+                    if (type === "display") {
+                        return date.substring(0, 10) + ' ' + date.substring(11, 16);
+                    }
+                    return date;
+                }
             },
             {
                 "data": "description"
@@ -30,11 +44,13 @@ $(function () {
             },
             {
                 "defaultContent": "Edit",
-                "orderable": false
+                "orderable": false,
+                "render": renderEditBtn
             },
             {
                 "defaultContent": "Delete",
-                "orderable": false
+                "orderable": false,
+                "render": renderDeleteBtn
             }
         ],
         "order": [
@@ -42,7 +58,10 @@ $(function () {
                 0,
                 "desc"
             ]
-        ]
+        ],
+        "createdRow": function (row, data, dataIndex) {
+            data.exceed ? $(row).attr("data-mealExceed", true) : $(row).attr("data-mealExceed", true);
+        },
+        "initComplete": makeEditable
     });
-    makeEditable();
 });
