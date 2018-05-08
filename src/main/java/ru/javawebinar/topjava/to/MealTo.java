@@ -20,7 +20,7 @@ public class MealTo extends BaseTo implements Serializable {
     @Size(max = 100)
     private String description;
 
-    @Range(min = 0, max = UserUtil.DEFAULT_CALORIES_PER_DAY)
+    @Range(min = 0)
     @NotNull
     private Integer calories;
 

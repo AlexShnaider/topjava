@@ -1,16 +1,12 @@
 var ajaxUrl = "ajax/profile/meals/";
 var datatableApi;
 
-function filterTable() {
-    $.ajax({
-        type: "POST",
-        url: ajaxUrl + "filter",
-        data: $("#filter").serialize()
-    }).done(updateTableByData);
-}
-
 function updateTable() {
-    $.get(ajaxUrl, updateTableByData);
+        $.ajax({
+            type: "POST",
+            url: ajaxUrl + "filter",
+            data: $("#filter").serialize()
+        }).done(updateTableByData);
 }
 
 function clearFilter() {
@@ -60,7 +56,7 @@ $(function () {
             ]
         ],
         "createdRow": function (row, data, dataIndex) {
-            data.exceed ? $(row).attr("data-mealExceed", true) : $(row).attr("data-mealExceed", true);
+            $(row).attr("data-mealExceed", data.exceed);
         },
         "initComplete": makeEditable
     });

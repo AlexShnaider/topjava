@@ -51,7 +51,7 @@
                             <span class="fa fa-remove"></span>
                             <spring:message code="common.cancel"/>
                         </button>
-                        <button class="btn btn-primary" onclick="filterTable()">
+                        <button class="btn btn-primary" onclick="updateTable()">
                             <span class="fa fa-filter"></span>
                             <spring:message code="meal.filter"/>
                         </button>
@@ -124,9 +124,11 @@
 <jsp:include page="fragments/footer.jsp"/>
 </body>
 <script type="text/javascript">
-    var i18n = [];
     i18n["addTitle"] = '<spring:message code="meal.add"/>';
     i18n["editTitle"] = '<spring:message code="meal.edit"/>';
 </script>
 <jsp:include page="fragments/toolTipsVars.jsp"/>
+<link rel="stylesheet" type="text/css" href="/webjars/datetimepicker/2.5.14/jquery.datetimepicker.css"/>
+<script src="/webjars/datetimepicker/2.5.14/jquery.datetimepicker.js"></script>
+<script src="/webjars/datetimepicker/2.5.14/build/jquery.datetimepicker.full.min.js"></script>
 </html>

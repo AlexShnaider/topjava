@@ -52,12 +52,9 @@ public class MealServiceImpl implements MealService {
         return checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 
-    @CacheEvict(value = "users", allEntries = true)
-    @Transactional
     @Override
     public Meal update(MealTo mealTo, int userId) {
-        Meal meal = get(mealTo.getId(), userId);
-        return repository.save(MealsUtil.updateFromTo(meal, mealTo), userId);
+        return checkNotFoundWithId(repository.save(MealsUtil.createFromTo(mealTo), userId), mealTo.getId());
     }
 
     @Override

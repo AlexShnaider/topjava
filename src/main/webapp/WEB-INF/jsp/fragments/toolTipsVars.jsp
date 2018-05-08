@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <script type="text/javascript">
+    var i18n = [];
     <c:forEach var="key" items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus"}%>'>
     i18n["${key}"] = "<spring:message code="${key}"/>";
     </c:forEach>
