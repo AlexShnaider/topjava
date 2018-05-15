@@ -16,9 +16,6 @@ import java.util.List;
 @RequestMapping("/ajax/admin/users")
 public class AdminAjaxController extends AbstractUserController {
 
-    @Autowired
-    Validator userToFormValidator;
-
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(userToFormValidator);

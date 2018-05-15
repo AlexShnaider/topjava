@@ -2,6 +2,8 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.User;
@@ -11,6 +13,11 @@ import ru.javawebinar.topjava.to.UserTo;
 @RequestMapping(ProfileRestController.REST_URL)
 public class ProfileRestController extends AbstractUserController {
     static final String REST_URL = "/rest/profile";
+
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(userToFormValidator);
+    }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public User get() {
@@ -24,7 +31,7 @@ public class ProfileRestController extends AbstractUserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody UserTo userTo) {
+    public void update(@Validated @RequestBody UserTo userTo) {
         super.update(userTo, AuthorizedUser.id());
     }
 

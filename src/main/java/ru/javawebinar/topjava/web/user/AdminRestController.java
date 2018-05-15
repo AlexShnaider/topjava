@@ -19,9 +19,6 @@ import java.util.List;
 public class AdminRestController extends AbstractUserController {
     static final String REST_URL = "/rest/admin/users";
 
-    @Autowired
-    Validator userFormValidator;
-
     @InitBinder
     protected void initBinder(WebDataBinder binder) {
         binder.addValidators(userFormValidator);
@@ -62,7 +59,7 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody User user, @PathVariable("id") int id) {
+    public void update(@Validated @RequestBody User user, @PathVariable("id") int id) {
         super.update(user, id);
     }
 
