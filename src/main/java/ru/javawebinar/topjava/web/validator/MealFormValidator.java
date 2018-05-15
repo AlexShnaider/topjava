@@ -8,7 +8,6 @@ import org.springframework.validation.Validator;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class MealFormValidator implements Validator {
         Meal meal = (Meal) oMeal;
         List<Meal> existedMeals =
                 service.getBetweenDateTimes(meal.getDateTime(), meal.getDateTime(), AuthorizedUser.id());
-        !!!!!if (!existedMeals.isEmpty() && existedMeals.get(0).getId()!= meal.getId()) {
+        if (!existedMeals.isEmpty() && !existedMeals.get(0).getId().equals(meal.getId())) {
             errors.rejectValue("dateTime", "", "Meal with such dateTime already exists");
         }
     }
